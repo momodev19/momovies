@@ -18,17 +18,16 @@ use App\Http\Controllers\Api\V1\ProfileController;
 //     return $request->user();
 // });
 
+// auth route
 Route::group(['prefix' => 'auth'], function () {
     Route::post('/login', [AuthController::class, 'login']);
+    Route::delete('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 });
-
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
-
-
 
     // Route::get('/profile', [ProfileController::class, 'index']);
     // Route::apiResource('/profile', ProfileController::class);

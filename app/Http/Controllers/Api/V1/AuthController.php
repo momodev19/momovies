@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
 class AuthController extends Controller
 {
     /**
-     * Login
+     * Login to get token
      *
      * @unauthenticated
      */
@@ -33,26 +33,14 @@ class AuthController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Logout
      */
-    public function show(string $id)
+    public function logout(Request $request): JsonResponse
     {
-        //
-    }
+        $request->user()->tokens()->delete();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function logout(string $id)
-    {
-        //
+        return response()->json([
+            'message' => 'Successfully logged out',
+        ]);
     }
 }
