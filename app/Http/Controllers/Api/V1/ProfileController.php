@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use Request;
 
 class ProfileController extends Controller
 {
-    public function index(): string
+    public function index(Request $request): string
     {
         return 'qwe';
     }

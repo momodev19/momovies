@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\Api\V1\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\MovieController;
 use App\Http\Controllers\Api\V1\ProfileController;
 
 // Route::get('/user', function (Request $request) {
@@ -24,15 +25,23 @@ Route::group(['prefix' => 'auth'], function () {
     Route::delete('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 });
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
+Route::group(['prefix' => 'movie'], function () {
+    Route::get('/', [MovieController::class, 'index']);
+    Route::get('/{movie:key}', [MovieController::class, 'show']);
+});
 
-    // Route::get('/profile', [ProfileController::class, 'index']);
-    // Route::apiResource('/profile', ProfileController::class);
+Route::middleware('auth:sanctum')->group(function () {
+    // Route::get('/user', function (Request $request) {
+    //     return $request->user();
+    // });
+
     Route::group(['prefix' => 'profile'], function () {
         Route::get('/', [ProfileController::class, 'index']);
         Route::patch('/{id}', [ProfileController::class, 'update']);
+    });
+
+    Route::group(['prefix' => 'movie'], function () {
+        Route::post('/', [MovieController::class, 'store']);
+        Route::patch('/{movie:key}', [MovieController::class, 'update']);
     });
 });
