@@ -43,5 +43,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::group(['prefix' => 'movie'], function () {
         Route::post('/', [MovieController::class, 'store']);
         Route::patch('/{movie:key}', [MovieController::class, 'update']);
+        Route::delete('/{movie:key}', [MovieController::class, 'destroy']);
     });
 });

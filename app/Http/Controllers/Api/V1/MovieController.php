@@ -35,7 +35,7 @@ class MovieController extends Controller
     {
         $movieService->new($request->validated());
 
-        return response()->json(['success' => true]);
+        return $this->success(['message' => 'Movie created successfully']);
     }
 
     /**
@@ -59,7 +59,7 @@ class MovieController extends Controller
 
         $movie->save();
 
-        return response()->json(['success' => true]);
+        return $this->success(['message' => 'Movie updated successfully']);
     }
 
     /**
@@ -67,6 +67,8 @@ class MovieController extends Controller
      */
     public function destroy(Movie $movie)
     {
-        //
+        $movie->delete();
+
+        return $this->success(['message' => 'Movie deleted successfully']);
     }
 }
