@@ -29,6 +29,8 @@ class MovieFactory extends Factory
             'release_year' => $releaseYear,
             'image' => 'https://picsum.photos/200/300?random=' . Str::random(10),
             'key' => $this->getMovieKey($title, $releaseYear),
+            'created_by' => 1,
+            'updated_by' => 1
         ];
     }
 }

@@ -16,6 +16,9 @@ return new class () extends Migration {
             $table->text('description');
             $table->integer('release_year');
             $table->string('image');
+            $table->string('key')->unique();
+            $table->foreignId('created_by')->constrained('users');
+            $table->foreignId('updated_by')->constrained('users');
             $table->timestamps();
         });
 
@@ -23,14 +26,17 @@ return new class () extends Migration {
             $table->id();
             $table->string('title');
             $table->text('description');
+            $table->foreignId('created_by')->constrained('users');
+            $table->foreignId('updated_by')->constrained('users');
             $table->timestamps();
         });
 
-        Schema::create('movie_genres', function (Blueprint $table) {
+        Schema::create('movie_genre', function (Blueprint $table) {
             $table->id();
-            $table->string('movie_id');
-            $table->text('genre_id');
-            $table->timestamps();
+            $table->foreignId('movie_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('genre_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('created_by')->constrained('users');
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 
@@ -39,8 +45,8 @@ return new class () extends Migration {
      */
     public function down(): void
     {
+        Schema::dropIfExists('movie_genre');
         Schema::dropIfExists('movies');
         Schema::dropIfExists('genres');
-        Schema::dropIfExists('movie_genres');
     }
 };

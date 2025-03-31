@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Movie;
-use Illuminate\Support\Arr;
+use DB;
 use App\Services\MovieService;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
@@ -13,6 +13,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class MovieController extends Controller
 {
+    public function __construct(public MovieService $movieService)
+    {
+    }
+
     /**
      * Fetch all movies in paginated form.
      *
@@ -31,9 +35,11 @@ class MovieController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreMovieRequest $request, MovieService $movieService)
+    public function store(StoreMovieRequest $request)
     {
-        $movieService->new($request->validated());
+        DB::transaction(function () use ($request) {
+            $this->movieService->new($request);
+        });
 
         return $this->success(['message' => 'Movie created successfully']);
     }
@@ -47,17 +53,17 @@ class MovieController extends Controller
      */
     public function show(Movie $movie): JsonResponse
     {
-        return response()->json(Arr::only($movie->getAttributes(), $movie->getFillable()));
+        return response()->json($this->movieService->get($movie));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateMovieRequest $request, Movie $movie, MovieService $movieService)
+    public function update(UpdateMovieRequest $request, Movie $movie)
     {
-        $movieService->update($request->validated(), $movie);
-
-        $movie->save();
+        DB::transaction(function () use ($request, $movie) {
+            $this->movieService->update($request, $movie);
+        });
 
         return $this->success(['message' => 'Movie updated successfully']);
     }

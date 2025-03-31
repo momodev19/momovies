@@ -3,19 +3,29 @@
 namespace App\Services;
 
 use App\Models\Movie;
-use App\Traits\StringTraits;
+use App\Http\Requests\Movie\StoreMovieRequest;
+use App\Http\Requests\Movie\UpdateMovieRequest;
 
 class MovieService
 {
-    use StringTraits;
-
-    public function new(array $data): void
+    public function new(StoreMovieRequest $request): Void
     {
-        Movie::create($data);
+        $movie = Movie::create($request->validated());
+        $movie->genres()->sync($request->genres);
     }
 
-    public function update(array $data, Movie $movie): void
+    public function update(UpdateMovieRequest $request, Movie $movie): void
     {
-        $movie->fill($data);
+        $movie->update($request->validated());
+        $movie->genres()->sync($request->genres);
+    }
+
+    public function get(Movie $movie): array
+    {
+        return [
+            $movie->toArray() + [
+                'genres' => $movie->genres->toArray()
+            ]
+        ];
     }
 }
