@@ -20,7 +20,7 @@ class Movie extends Model
 
     public function genres(): BelongsToMany
     {
-        return $this->belongsToMany(Genre::class, 'movie_genre', 'movie_id', 'genre_id')->using(MovieGenre::class); //->withTimestamps() //->using(MovieGenre::class)
+        return $this->belongsToMany(Genre::class, 'movie_genre', 'movie_id', 'genre_id')->using(MovieGenre::class);
     }
 
     protected static function booted(): void

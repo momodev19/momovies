@@ -34,7 +34,7 @@ class Genre extends Model
 
     public function movies(): BelongsToMany
     {
-        return $this->belongsToMany(Movie::class, 'movie_genre', 'genre_id', 'movie_id'); // ->withTimestamps()
+        return $this->belongsToMany(Movie::class, 'movie_genre', 'genre_id', 'movie_id');
     }
 
     public function scopeSelectable(Builder $query): void
